@@ -543,6 +543,7 @@ function handleFollowUp(selectedAnswer, stepId, answerId, nextStep, message = ''
 }
 
 function closeQuiz() {
+  document.body.classList.remove('no-scroll');
   document.querySelector('.quiz').style.display = 'none';
 }
 
@@ -583,3 +584,14 @@ showWelcomeInfoYesBtn.addEventListener('click', () => {
   handleNextStep(currentStep);
 });
 
+//Only for Tilda environment
+document.addEventListener('DOMContentLoaded', () => {
+  const link = document.querySelector('a[href="#openQuiz"]');
+
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    document.body.classList.add('no-scroll');
+    quiz.style.display = 'block';
+  });
+})

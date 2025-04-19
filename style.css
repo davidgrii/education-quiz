@@ -14,6 +14,10 @@ h1, h2, h3, h4, h5, h6 {
     color: #161526;
 }
 
+body {
+    height: 10000px;
+}
+
 a {
     text-decoration: none;
     color: #161526;
@@ -59,12 +63,16 @@ img {
     width: 100vw;
     height: 100vh;
     box-sizing: border-box;
-    cursor: pointer;
     display: block;
     padding: 0 20px;
     background-color: rgba(0, 0, 0, .6);
     z-index: 991;
     outline: 0;
+}
+
+.no-scroll {
+    overflow: hidden;
+    height: 100vh;
 }
 
 .quiz-container {
