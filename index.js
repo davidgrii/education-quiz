@@ -336,10 +336,16 @@ const QUIZ_STEPS = [
 const firstStep = document.querySelector('.welcome');
 
 const nextStepBtn = document.querySelector('.next-btn');
+const resetQuizBtn = document.querySelector('.reset-button');
+
 const showWelcomeInfoNoBtn = document.querySelector('.btn-secondary');
 const showWelcomeInfoYesBtn = document.querySelector('#yes-button');
 
 const stepWrapper = document.querySelector('.step-wrapper');
+const linkWrapper = document.querySelector('.links-container');
+const formWrapper = document.querySelector('.form-container');
+
+
 const totalStepElement = document.querySelector('.total-steps');
 const currentStepElement = document.querySelector('.current-step');
 
@@ -353,6 +359,8 @@ currentStepElement.textContent = currentStep;
 
 nextStepBtn.disabled = true;
 nextStepBtn.classList.add('disabled');
+resetQuizBtn.disabled = true;
+resetQuizBtn.classList.add('disabled_reset_btn');
 
 function handleNextStep(stepId) {
   document.querySelector('.welcome-info').style.display = 'none';
@@ -364,7 +372,7 @@ function handleNextStep(stepId) {
   const stepData = QUIZ_STEPS.find(step => step.id === stepId);
   if (!stepData) return;
 
-  quizContainer.innerHTML = '';
+  stepWrapper.innerHTML = '';
 
   const { answers, title } = stepData;
 
@@ -381,7 +389,7 @@ function handleNextStep(stepId) {
     </div>
   `;
 
-  quizContainer.insertAdjacentHTML('afterbegin', quizStepComponent);
+  stepWrapper.insertAdjacentHTML('afterbegin', quizStepComponent);
 
   stepWrapper.dataset.activeStep = stepId.toString();
   currentStepElement.textContent = stepId;
@@ -542,12 +550,35 @@ nextStepBtn.addEventListener('click', () => {
   handleNextStep(currentStep);
 });
 
+resetQuizBtn.addEventListener('click', () => {
+  resetQuizBtn.disabled = true;
+  resetQuizBtn.classList.add('disabled_reset_btn');
+
+  stepWrapper.style.display = 'none';
+  formWrapper.style.display = 'none';
+  linkWrapper.style.display = 'none';
+
+  firstStep.style.display = 'flex';
+  currentStep = 0
+
+  handleNextStep(1);
+});
+
 showWelcomeInfoNoBtn.addEventListener('click', () => {
+  stepWrapper.style.display = 'block';
+
+  resetQuizBtn.disabled = false;
+  resetQuizBtn.classList.remove('disabled_reset_btn');
+
   showWelcomeInfo();
 });
 
 showWelcomeInfoYesBtn.addEventListener('click', () => {
+  stepWrapper.style.display = 'block';
   firstStep.style.display = 'none';
+
+  resetQuizBtn.disabled = false;
+  resetQuizBtn.classList.remove('disabled_reset_btn');
 
   handleNextStep(currentStep);
 });

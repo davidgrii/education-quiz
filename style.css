@@ -156,7 +156,7 @@ img {
     align-items: center;
 }
 
-.next-btn {
+.next-btn, .reset-button {
     background: linear-gradient(90deg, #007bff, #005eff);
     box-shadow: 0 4px 10px rgba(0, 91, 255, 0.3);
     transition: transform 0.2s ease-in-out;
@@ -176,9 +176,32 @@ img {
     cursor: pointer;
 }
 
+.reset-button {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    background: white;
+    font-size: 16px;
+    color: rgba(22, 21, 38, 0.8);
+    box-shadow: 0 4px 10px rgba(0, 91, 255, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 12px 30px 12px 33px;
+    margin-bottom: 10px;
+
+    svg {
+        width: 22px;
+        height: 22px;
+    }
+}
+
 .disabled {
     opacity: 0.6;
     background-color: #036cf3;
+    cursor: not-allowed;
+}
+
+.disabled_reset_btn {
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
@@ -219,7 +242,7 @@ img {
     cursor: pointer;
 }
 
-.btn-primary:hover, .next-btn:hover, .btn-secondary:hover {
+.btn-primary:hover, .next-btn:hover, .btn-secondary:hover, .reset-button:hover {
     opacity: 0.8;
     transform: scale(1.05);
 }
