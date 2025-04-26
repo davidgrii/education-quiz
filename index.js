@@ -96,8 +96,9 @@ const QUIZ_STEPS = [
   },
   {
     id: 4,
-    title: 'Congratulations you are eligible for student finance\n' +
-      'By the way, I forgot to ask—are you confident in your English skills for a 350-word essay required at the interview, or would you need some support?',
+    title: 'Congratulations you are eligible for student finance.\n' +
+      'Let’s move on to the next questions. For the interview, you’ll need to write a 350-word essay.\n' +
+      'Are you confident in your English skills for this?',
     answers: [
       { id: 'yes', title: 'Yes its ok', nextStep: 5 },
       {
@@ -113,9 +114,10 @@ const QUIZ_STEPS = [
     answers: [
       { id: 'speak_now', title: 'Speak right now with our manager' },
       {
-        id: 'more_info', title: 'Tell me more about courses &#128218',
+        id: 'more_info', title: 'More information about courses,\n' +
+          'locations, and study modes.\n &#128218',
         extra_info: {
-          title: 'No problem! Let’s go over the courses and study modes. Which campus is closest to you?',
+          title: 'Our campuses are based in these cities. Which one is closest to you?',
           answers: [
             {
               id: 'london', title: 'London',
@@ -175,6 +177,13 @@ const QUIZ_STEPS = [
                     <li>Certificate of Higher Education in Public Health (Cert HE) - 1 year</li>
                   </ul>
               </details>
+              
+              <h4 class="subtitle">Are you looking for different course?</h4>
+              <p style="font-size: 0.9rem">
+                You don’t need any qualifications to apply for these courses—just eligibility for Student Finance.
+                If you're interested in a different course, let me know! We work with over 20 universities, but most of their programs do require certain qualifications.
+              </p>
+              <button onclick="handleContact()" id="contact-us" class="btn-primary" style="max-width: 200px">Contact Us</button>
               `
             },
             {
@@ -230,6 +239,13 @@ const QUIZ_STEPS = [
                   <li>Certificate of Higher Education in Public Health (Cert HE) - 1 year</li>
                 </ul>
               </details>
+              
+              <h4 class="subtitle">Are you looking for different course?</h4>
+              <p style="font-size: 0.9rem">
+                You don’t need any qualifications to apply for these courses—just eligibility for Student Finance.
+                If you're interested in a different course, let me know! We work with over 20 universities, but most of their programs do require certain qualifications.
+              </p>
+              <button onclick="handleContact()" id="contact-us" class="btn-primary" style="max-width: 200px">Contact Us</button>
               `
             },
             {
@@ -285,6 +301,13 @@ const QUIZ_STEPS = [
                   <li>Certificate of Higher Education in Public Health (Cert HE) - 1 year</li>
                 </ul>
               </details>
+              
+              <h4 class="subtitle">Are you looking for different course?</h4>
+              <p style="font-size: 0.9rem">
+                You don’t need any qualifications to apply for these courses—just eligibility for Student Finance.
+                If you're interested in a different course, let me know! We work with over 20 universities, but most of their programs do require certain qualifications.
+              </p>
+              <button onclick="handleContact()" id="contact-us" class="btn-primary" style="max-width: 200px">Contact Us</button>
               `
             },
             {
@@ -322,13 +345,20 @@ const QUIZ_STEPS = [
                   <li>HND in Digital Technologies (Cyber Security) 2 years</li>
                 </ul>
               </details>
+              
+              <h4 class="subtitle">Are you looking for different course?</h4>
+              <p style="font-size: 0.9rem">
+                You don’t need any qualifications to apply for these courses—just eligibility for Student Finance.
+                If you're interested in a different course, let me know! We work with over 20 universities, but most of their programs do require certain qualifications.
+              </p>
+              <button onclick="handleContact()" id="contact-us" class="btn-primary" style="max-width: 200px">Contact Us</button>
               `
             }
           ]
         }
       },
       { id: 'book_call', title: 'Book a call Calendly' },
-      { id: 'leave_details', title: 'Leave your details' }
+      { id: 'leave_details', title: 'Receive the guide via email' }
     ]
   }
 ];
@@ -345,12 +375,12 @@ const stepWrapper = document.querySelector('.step-wrapper');
 const linkWrapper = document.querySelector('.links-container');
 const formWrapper = document.querySelector('.form-container');
 
-
 const totalStepElement = document.querySelector('.total-steps');
 const currentStepElement = document.querySelector('.current-step');
 
 const totalSteps = QUIZ_STEPS.length;
 let currentStep = 1;
+let prevStepData = [];
 
 stepWrapper.dataset.totalSteps = totalSteps.toString();
 stepWrapper.dataset.activeStep = currentStep.toString();
@@ -395,9 +425,46 @@ function handleNextStep(stepId) {
   currentStepElement.textContent = stepId;
 }
 
+function handlePrevStep() {
+  const { title, answers } = prevStepData;
+  stepWrapper.innerHTML = '';
+
+  return stepWrapper.innerHTML = `
+      <div class="quiz-step">
+        <button onclick="handlePrevStep()" class="previous-btn">
+            <svg class="t-btn__icon t-btn__icon_arrow right" width="20" height="20" viewBox="0 0 18 18" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.25 9H3.75" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+              <path d="M9 3.75L3.75 9L9 14.25" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+            </svg>
+        </button>
+        
+        <h3 class="city-title">${title}</h3>
+    
+        <div class="answer-step-wrapper">
+          ${answers.map(({ id, title }) => `
+            <label onclick="handleExtraInfo(this, '${id}')" class="answer">
+              ${title}
+            </label>
+          `).join('')}
+        </div>
+
+        <div class="extra-info-wrapper">
+          ${answers.map(({ id, description, description_2 }) => `
+           <div class="extra-info" id="info-${id}" style="display: none;">
+             ${description || ''}<br>
+             ${description_2 || ''}
+           </div>
+         `).join('')}
+        </div>
+      </div>
+      `;
+}
+
 function showWelcomeInfo() {
   const welcomeInfo = document.querySelector('.welcome-info');
-
 
   nextStepBtn.disabled = false;
   nextStepBtn.classList.remove('disabled');
@@ -407,10 +474,17 @@ function showWelcomeInfo() {
 }
 
 function handleExtraInfo(selectedAnswer, id) {
-  document.querySelectorAll('.answer').forEach(answer =>
-    answer.classList.remove('answer-active')
+  const cityTitle = document.querySelector('.city-title');
+  const prevBtn = document.querySelector('.previous-btn');
+
+  document.querySelectorAll('.answer').forEach(answer => {
+      answer.classList.remove('answer-active');
+      answer.style.display = 'none';
+    }
   );
 
+  prevBtn.style.display = 'block';
+  cityTitle.style.display = 'none';
   selectedAnswer.classList.add('answer-active');
 
   document.querySelectorAll('.extra-info').forEach(info =>
@@ -438,22 +512,31 @@ function handleActiveAnswer(selectedAnswer, stepId, answerId) {
   const selectedOption = currentStepData.answers.find(a => a.id === answerId);
   if (!selectedOption) return;
 
-  const quizContainer = document.querySelector('.step-wrapper');
-
   if (stepId === 5) {
     nextStepBtn.disabled = true;
     nextStepBtn.classList.add('disabled');
 
     if (selectedOption.id === 'speak_now') {
-      quizContainer.innerHTML = '';
+      stepWrapper.innerHTML = '';
 
       linksBlock.style.display = 'block';
     } else if (selectedOption.id === 'more_info') {
       const { title, answers } = selectedOption.extra_info;
+      prevStepData = { title, answers };
 
-      return quizContainer.innerHTML = `
+      return stepWrapper.innerHTML = `
       <div class="quiz-step">
-        <h3 class="title">${title}</h3>
+        <button onclick="handlePrevStep()" class="previous-btn">
+            <svg class="t-btn__icon t-btn__icon_arrow right" width="20" height="20" viewBox="0 0 18 18" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.25 9H3.75" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+              <path d="M9 3.75L3.75 9L9 14.25" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+            </svg>
+        </button>
+        
+        <h3 class="city-title">${title}</h3>
     
         <div class="answer-step-wrapper">
           ${answers.map(({ id, title }) => `
@@ -461,7 +544,7 @@ function handleActiveAnswer(selectedAnswer, stepId, answerId) {
               ${title}
             </label>
           `).join('')}
-       </div>
+        </div>
 
         <div class="extra-info-wrapper">
           ${answers.map(({ id, description, description_2 }) => `
@@ -476,14 +559,15 @@ function handleActiveAnswer(selectedAnswer, stepId, answerId) {
     } else if (selectedOption.id === 'book_call') {
       window.location.href = 'https://calendly.com/topeducation-uk';
     } else if (selectedOption.id === 'leave_details') {
-      quizContainer.innerHTML = '';
+      stepWrapper.innerHTML = '';
+      stepWrapper.style.display = 'none';
       formBlock.style.display = 'flex';
     }
     return;
   }
 
   if (selectedOption.followUpQuestion) {
-    quizContainer.innerHTML = `
+    stepWrapper.innerHTML = `
       <div class="quiz-step">
         <h3 class="title">${selectedOption.followUpQuestion.title}</h3>
         <div class="answer-step-wrapper">
@@ -502,7 +586,7 @@ function handleActiveAnswer(selectedAnswer, stepId, answerId) {
     nextStepBtn.disabled = true;
     nextStepBtn.classList.add('disabled');
 
-    quizContainer.innerHTML = `
+    stepWrapper.innerHTML = `
       <div class="quiz-step">
         <h3 class="title">Unfortunately, you cannot proceed</h3>
         <p class="quiz-message-error">${selectedOption.message}</p>
@@ -522,13 +606,11 @@ function handleFollowUp(selectedAnswer, stepId, answerId, nextStep, message = ''
   );
   selectedAnswer.classList.add('answer-active');
 
-  const quizContainer = document.querySelector('.step-wrapper');
-
   if (!nextStep) {
     nextStepBtn.disabled = true;
     nextStepBtn.classList.add('disabled');
 
-    quizContainer.innerHTML = `
+    stepWrapper.innerHTML = `
       <div class="quiz-step">
         <h3 class="title">Unfortunately, you cannot proceed</h3>
         <p class="quiz-message-error">${message}</p>
@@ -542,12 +624,23 @@ function handleFollowUp(selectedAnswer, stepId, answerId, nextStep, message = ''
   handleNextStep(currentStep);
 }
 
+function handleContact() {
+  document.body.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'contact-us') {
+      handleNextStep(5)
+    }
+  });
+}
+
 function closeQuiz() {
   document.body.classList.remove('no-scroll');
   document.querySelector('.quiz').style.display = 'none';
 }
 
 nextStepBtn.addEventListener('click', () => {
+  stepWrapper.style.display = 'block';
+  firstStep.style.display = 'none';
+
   handleNextStep(currentStep);
 });
 
@@ -560,13 +653,13 @@ resetQuizBtn.addEventListener('click', () => {
   linkWrapper.style.display = 'none';
 
   firstStep.style.display = 'flex';
-  currentStep = 0
+  currentStep = 0;
 
   handleNextStep(1);
 });
 
 showWelcomeInfoNoBtn.addEventListener('click', () => {
-  stepWrapper.style.display = 'block';
+  stepWrapper.style.display = 'none';
 
   resetQuizBtn.disabled = false;
   resetQuizBtn.classList.remove('disabled_reset_btn');
@@ -587,6 +680,7 @@ showWelcomeInfoYesBtn.addEventListener('click', () => {
 //Only for Tilda environment
 document.addEventListener('DOMContentLoaded', () => {
   const link = document.querySelector('a[href="#openQuiz"]');
+  const quiz = document.querySelector('.quiz');
 
   link.addEventListener('click', (e) => {
     e.preventDefault();
@@ -594,4 +688,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('no-scroll');
     quiz.style.display = 'block';
   });
-})
+});

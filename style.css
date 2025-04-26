@@ -14,21 +14,20 @@ h1, h2, h3, h4, h5, h6 {
     color: #161526;
 }
 
-body {
-    height: 10000px;
-}
-
 a {
     text-decoration: none;
     color: #161526;
     cursor: pointer;
 }
 
-button, input, textarea {
+button, input, textarea, details, summary {
     outline: none;
     border: none;
     background: none;
     font: inherit;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 button {
@@ -95,24 +94,17 @@ img {
 
     opacity: 0;
     animation: quizZoom 1.1s ease forwards;
-}
 
-@keyframes quizZoom {
-    from {
-        opacity: 0;
-        transform: scale(0) translateY(0);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(-50%);
+    @media (max-width: 768px) {
+        flex-direction: column;
+        height: 80vh;
     }
 }
 
 .nav {
     display: flex;
     overflow-y: scroll;
-    min-height: 500px;
+    /*min-height: 500px;*/
     width: 100%;
     justify-content: space-between;
     flex-direction: column;
@@ -120,51 +112,62 @@ img {
     padding: 25px;
     background-color: #f4f5fc;
     max-width: 288px;
+
+    @media (max-width: 768px) {
+        max-width: 100%;
+        min-height: auto;
+        overflow-y: visible;
+        padding: 15px 20px;
+
+        .manager {
+            display: none;
+        }
+    }
+
+    .nav-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .manager-img {
+        border-radius: 6px;
+        margin-bottom: 15px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .manager-message {
+        font-size: 0.8rem;
+        background-color: white;
+        width: fit-content;
+        max-width: 300px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        gap: 10px;
+        padding: 10px 13px;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .manager-message:before {
+        content: '';
+        z-index: 1;
+        position: absolute;
+        background-color: white;
+        width: 13px;
+        height: 13px;
+        top: -7px;
+        left: 15px;
+        transform: rotate(45deg);
+    }
 }
 
-.manager-img {
-    border-radius: 6px;
-    margin-bottom: 15px;
-    width: 50px;
-    height: 50px;
-}
-
-.manager-message {
-    font-size: 0.8rem;
-    background-color: white;
-    width: fit-content;
-    max-width: 300px;
-    border-radius: 8px;
-    box-sizing: border-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    gap: 10px;
-    padding: 10px 13px;
-    position: relative;
-    z-index: 2;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.manager-message:before {
-    content: '';
-    z-index: 1;
-    position: absolute;
-    background-color: white;
-    width: 13px;
-    height: 13px;
-    top: -7px;
-    left: 15px;
-    transform: rotate(45deg);
-}
-
-.nav-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.next-btn, .reset-button {
+.next-btn, .reset-button, .previous-btn {
     background: linear-gradient(90deg, #007bff, #005eff);
     box-shadow: 0 4px 10px rgba(0, 91, 255, 0.3);
     transition: transform 0.2s ease-in-out;
@@ -182,6 +185,15 @@ img {
     color: white;
     border: none;
     cursor: pointer;
+}
+
+.previous-btn {
+    width: auto;
+    display: none;
+    padding: 15px;
+    max-height: 50px;
+    min-width: auto;
+    margin-bottom: 18px;
 }
 
 .reset-button {
@@ -250,7 +262,7 @@ img {
     cursor: pointer;
 }
 
-.btn-primary:hover, .next-btn:hover, .btn-secondary:hover, .reset-button:hover {
+.btn-primary:hover, .next-btn:hover, .btn-secondary:hover, .reset-button:hover, .previous-btn:hover {
     opacity: 0.8;
     transform: scale(1.05);
 }
@@ -273,11 +285,19 @@ img {
     opacity: 0.7;
 }
 
-.title {
+.title, .city-title {
     user-select: none;
     font-size: 1.7rem;
     font-weight: 400;
     margin-bottom: 18px;
+
+    @media (max-width: 768px) {
+        font-size: 1.3rem;
+    }
+
+    @media (max-width: 468px) {
+        font-size: 1.1rem;
+    }
 }
 
 .welcome {
@@ -289,16 +309,31 @@ img {
     width: 70%;
     padding: 35px 30px 35px 35px;
     animation: showInScale 0.8s ease;
-}
 
+    @media (max-width: 768px) {
+        width: auto;
+        height: 100%;
+        padding: 25px;
+
+        .title {
+            max-width: 550px;
+        }
+    }
+}
 .welcome-info {
     display: none;
     overflow-y: scroll;
     width: 70%;
     padding: 35px 30px 35px 35px;
-    animation: showInScale 0.8s ease;
-}
 
+    animation: showInScale 0.8s ease;
+
+    @media (max-width: 768px) {
+        width: auto;
+        height: 100%;
+        padding: 25px;
+    }
+}
 .welcome-list {
     display: flex;
     flex-direction: column;
@@ -316,16 +351,22 @@ img {
 }
 
 .step-wrapper {
-    display: flex;
+    display: none;
+    width: 100%;
 }
 
 .quiz-step {
     flex: 1 1 auto;
     overflow-y: scroll;
-    min-height: 500px;
+    max-height: 100%;
     width: 100%;
     padding: 35px;
+
     animation: fadeInUp 0.5s ease-in-out;
+
+    @media (max-width: 768px) {
+        padding: 20px;
+    }
 }
 
 .quiz-message-error {
@@ -397,6 +438,10 @@ img {
     height: auto;
     min-height: 60px;
     padding: 10px 15px;
+
+    @media (max-width: 768px) {
+        font-size: 0.88rem;
+    }
 }
 
 .answer-active {
@@ -419,7 +464,14 @@ img {
     max-height: 600px;
     width: 70%;
     padding: 35px 30px 35px 35px;
+
     animation: showInScale 0.8s ease;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        max-height: 100%;
+        overflow-y: visible;
+    }
 }
 
 .links-container {
@@ -428,9 +480,14 @@ img {
     gap: 15px;
     overflow-y: scroll;
     max-height: 600px;
-    width: 70%;
+    width: 100%;
     padding: 35px 30px 35px 35px;
     animation: showInScale 0.8s ease;
+
+    @media (max-width: 768px) {
+        padding: 20px;
+        height: auto;
+    }
 }
 
 .links-wrapper {
@@ -513,7 +570,10 @@ img {
 }
 
 .subtitle {
+    display: block;
+    width: 100%;
     font-size: 1.1rem;
+    user-select: none;
     font-weight: 500;
 }
 
@@ -597,5 +657,17 @@ details[open] svg {
     to {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+@keyframes quizZoom {
+    from {
+        opacity: 0;
+        transform: scale(0) translateY(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(-50%);
     }
 }
