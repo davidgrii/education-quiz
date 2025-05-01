@@ -408,13 +408,29 @@ function handleNextStep(stepId) {
 
   const quizStepComponent = `
     <div class="quiz-step">
-      <h3 class="title">${title}</h3>
+        
+      <h3 class="title"> <img class="manager-img-mobile" src="https://static.tildacdn.com/tild6637-3435-4337-a239-656266316334/noroot.png"> ${title}</h3>
+      
       <div class="answer-step-wrapper">
-        ${answers.map(({ title, id }) => `
-          <label onclick="handleActiveAnswer(this, ${stepId}, '${id}')" class="answer">
-            ${title}
-          </label>
-        `).join('')}
+        ${answers.map(({ id, title }) => {
+          if (id === 'leave_details') {
+            return `<a href="#popup:quizform" style="color: black" class="answer">${title}</a>`;
+          }
+
+          if (id === 'more_info') {
+            return `
+            <label onclick="handleActiveAnswer(this, ${stepId}, '${id}')" class="answer detail-info">
+              ${title}
+            </label>
+          `;
+          }
+          
+          return `
+            <label onclick="handleActiveAnswer(this, ${stepId}, '${id}')" class="answer">
+              ${title}
+            </label>
+          `;
+        }).join('')}
       </div>
     </div>
   `;
@@ -518,6 +534,7 @@ function handleActiveAnswer(selectedAnswer, stepId, answerId) {
 
     if (selectedOption.id === 'speak_now') {
       stepWrapper.innerHTML = '';
+      stepWrapper.style.display = 'none';
 
       linksBlock.style.display = 'block';
     } else if (selectedOption.id === 'more_info') {
@@ -624,12 +641,30 @@ function handleFollowUp(selectedAnswer, stepId, answerId, nextStep, message = ''
   handleNextStep(currentStep);
 }
 
-function handleContact() {
-  document.body.addEventListener('click', function(e) {
-    if (e.target && e.target.id === 'contact-us') {
-      handleNextStep(5)
-    }
-  });
+function createContactComponent() {
+  const stepData = QUIZ_STEPS.find(step => step.id === 5);
+  if (!stepData) return '';
+
+  let { answers, title } = stepData;
+  answers = answers.filter((answer) => answer.id !== 'more_info');
+
+  const quizStepComponent = `
+    <div class="quiz-step">
+      <h3 class="title">
+        <img class="manager-img-mobile" src="https://static.tildacdn.com/tild6637-3435-4337-a239-656266316334/noroot.png">
+        ${title}
+      </h3>
+      <div class="answer-step-wrapper">
+        ${answers.map(({ title, id }) => `
+          <label onclick="handleActiveAnswer(this, 5, '${id}')" class="answer">
+            ${title}
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  return quizStepComponent;
 }
 
 function closeQuiz() {
@@ -689,3 +724,4 @@ document.addEventListener('DOMContentLoaded', () => {
     quiz.style.display = 'block';
   });
 });
+
